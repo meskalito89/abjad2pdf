@@ -3,11 +3,14 @@ from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters
 from abjad_generator import text2pdf
 from bot_texts import hello_text
+from sys import argv
 import Constants
 import pdb
 
-TOKEN = Constants.TOKEN
-# pdb.set_trace()
+try:
+    TOKEN = argv[1]
+except IndexError:
+    TOKEN = input("ENTER BOT TOKEN: ")
 
 updater = Updater(TOKEN, use_context=True)
 dispatcher = updater.dispatcher
