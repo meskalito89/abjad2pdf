@@ -2,21 +2,19 @@ from telegram.ext import Updater
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters
 from abjad_generator import text2pdf
-from os import environ
+from bot_texts import hello_text
+import Constants
+import pdb
 
-TOKEN = environ.get('TOKEN_FOR_ABJADPARSER_BOT')
+TOKEN = Constants.TOKEN
+# pdb.set_trace()
 
 updater = Updater(TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
-BOT_START_TEXT = """
-Привет. Я перевожу текст в ноты используя библиотеку abjad
-
-Для дополнительной информации посмотри сайт https://abjad.github.io/
-""" 
 
 def start(update: Update, context: CallbackContext):
-    context.bot.send_message(chat_id=update.effective_chat.id, text=BOT_START_TEXT)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=hello_text)
 
 def translate(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
@@ -25,6 +23,9 @@ def translate(update: Update, context: CallbackContext):
     with open(url_of_file, 'rb') as file:
         context.bot.send_document(chat_id, document=file)
 
+
+# def print_update(update: Update, context: CallbackContext):
+#     print(update)
     
 
 start_handler = CommandHandler('start', start)
@@ -32,6 +33,9 @@ dispatcher.add_handler(start_handler)
 
 translate_handler = MessageHandler(Filters.text, translate)
 dispatcher.add_handler(translate_handler)
+
+# update_printer = MessageHandler(Filters.all, print_update)
+# dispatcher.add_handler(update_printer)
 
 updater.start_polling()
 
